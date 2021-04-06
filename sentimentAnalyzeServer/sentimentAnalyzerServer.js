@@ -32,7 +32,22 @@ app.get("/",(req,res)=>{
 
 app.get("/url/emotion", (req,res) => {
 
-    return res.send({"happy":"90","sad":"10"});
+    const naturalLanguageUnderstanding = getNLUInstance();
+    
+    const analyzeParams = {
+        'url': req.query.url,
+        'features': {
+            'emotion': {
+            }
+        }
+    };
+
+    naturalLanguageUnderstanding.analyze(analyzeParams)
+        .then(analysisResults => {
+            return res.send(analysisResults["result"]["emotion"]["document"]["emotion"]);
+        })
+        .catch(err => {console.log('error:', err);});
+
 });
 
 app.get("/url/sentiment", (req,res) => {
@@ -40,7 +55,23 @@ app.get("/url/sentiment", (req,res) => {
 });
 
 app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
+
+    const naturalLanguageUnderstanding = getNLUInstance();
+    
+    const analyzeParams = {
+        'text': req.query.text,
+        'features': {
+            'emotion': {
+            }
+        }
+    };
+
+    naturalLanguageUnderstanding.analyze(analyzeParams)
+        .then(analysisResults => {
+            return res.send(analysisResults["result"]["emotion"]["document"]["emotion"]);
+        })
+        .catch(err => {console.log('error:', err);});
+
 });
 
 app.get("/text/sentiment", (req,res) => {
