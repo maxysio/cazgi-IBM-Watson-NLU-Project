@@ -51,7 +51,21 @@ app.get("/url/emotion", (req,res) => {
 });
 
 app.get("/url/sentiment", (req,res) => {
-    return res.send("url sentiment for "+req.query.url);
+    const naturalLanguageUnderstanding = getNLUInstance();
+    
+    const analyzeParams = {
+        'url': req.query.url,
+        'features': {
+            'sentiment': {
+            }
+        }
+    };
+
+    naturalLanguageUnderstanding.analyze(analyzeParams)
+        .then(analysisResults => {
+            return res.send(analysisResults["result"]["sentiment"]["document"]["label"]);
+        })
+        .catch(err => {console.log('error:', err);});
 });
 
 app.get("/text/emotion", (req,res) => {
@@ -75,7 +89,21 @@ app.get("/text/emotion", (req,res) => {
 });
 
 app.get("/text/sentiment", (req,res) => {
-    return res.send("text sentiment for "+req.query.text);
+    const naturalLanguageUnderstanding = getNLUInstance();
+    
+    const analyzeParams = {
+        'text': req.query.text,
+        'features': {
+            'sentiment': {
+            }
+        }
+    };
+
+    naturalLanguageUnderstanding.analyze(analyzeParams)
+        .then(analysisResults => {
+            return res.send(analysisResults["result"]["sentiment"]["document"]["label"]);
+        })
+        .catch(err => {console.log('error:', err);});
 });
 
 let server = app.listen(8080, () => {
